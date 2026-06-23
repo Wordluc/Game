@@ -1,0 +1,3 @@
+[submodule "TheEngine"]
+	path = TheEngine
+	url = git@github.com:Wordluc/TheEngine
