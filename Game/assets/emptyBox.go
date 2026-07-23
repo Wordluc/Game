@@ -28,7 +28,7 @@ func (c *EmptyBox) Start() error {
 	right.MoveTo(base.Vec[float32]{X: c.Opt.Size.X - c.Opt.Thick})
 	right.SetModifier(new(base.NewRigidBody(true, true, 0)))
 	//LEFT
-	left := new(core.NewRectangle(c.Opt.Thick+10, c.Opt.Size.Y))
+	left := new(core.NewRectangle(c.Opt.Thick, c.Opt.Size.Y))
 	left.SetModifier(new(base.NewRigidBody(true, true, 0)))
 	//creating node
 	c.node.AddObject(up)

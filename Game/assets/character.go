@@ -16,6 +16,7 @@ type Character struct {
 		Size base.Vec[float32]
 		Mass float32
 	}
+	leftjump   int
 	hangOnWall bool
 }
 
@@ -44,13 +45,21 @@ func (c *Character) Update(dt float32) error {
 	v := utils.GetVecForKeyboard(300)
 	v.Y = 0
 	if isTouchingWall {
-		if rl.IsKeyPressed(rl.KeySpace) {
+		if c.rg.IsStatic && rl.IsKeyPressed(rl.KeySpace) {
+			c.rg.IsStatic = false
+		} else if !c.rg.IsStatic && rl.IsKeyPressed(rl.KeySpace) {
 			c.rg.IsStatic = true
 			c.hangOnWall = true
+			c.rg.GetVelocity().SetXY(base.NULL_VEC32)
+			c.rg.GetForce().SetXY(base.NULL_VEC32)
 		}
 	}
-	if isTouchingDown || c.hangOnWall {
+	if c.hangOnWall || isTouchingDown {
+		c.leftjump = 2
+	}
+	if (isTouchingDown || c.leftjump > 0) || c.hangOnWall {
 		if rl.IsKeyPressed(rl.KeyW) {
+			c.leftjump--
 			if c.hangOnWall {
 				c.rg.IsStatic = false
 				c.hangOnWall = false
@@ -60,6 +69,8 @@ func (c *Character) Update(dt float32) error {
 			}
 		}
 	}
-	c.rg.ApplyImpulse(v)
+	if !c.rg.IsStatic {
+		c.rg.ApplyImpulse(v)
+	}
 	return nil
 }
