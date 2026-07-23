@@ -1,8 +1,6 @@
 package assets
 
 import (
-	"fmt"
-
 	"github.com/Wordluc/TheEngine/core"
 	"github.com/Wordluc/TheEngine/core/base"
 	"github.com/Wordluc/TheEngine/core/utils"
@@ -25,6 +23,7 @@ func (c *Character) Start() error {
 	c.o = new(core.NewRectangle(c.Opt.Size.X, c.Opt.Size.Y))
 	c.o.MoveTo(c.Opt.Pos)
 	c.rg = new(base.NewRigidBody(true, false, c.Opt.Mass))
+	c.rg.Id = "my"
 	c.o.SetModifier(c.rg)
 	c.node = base.NewNode(base.Vec[float32]{})
 	c.node.AddObject(c.o)
@@ -37,11 +36,10 @@ func (c *Character) GetEntity() base.Node {
 
 func (c *Character) Update(dt float32) error {
 	isTouchingDown := c.rg.Collision.CheckIf(func(cd base.CollisionDetail) bool {
-		fmt.Printf("%v\n", cd.Y <= 0)
-		return cd.Y <= 0
+		return cd.Y < 0
 	})
 	isTouchingWall := c.rg.Collision.CheckIf(func(cd base.CollisionDetail) bool {
-		return cd.X <= 0
+		return cd.X != 0
 	})
 	v := utils.GetVecForKeyboard(300)
 	v.Y = 0
